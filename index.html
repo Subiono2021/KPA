@@ -177,7 +177,7 @@
     border-bottom:1.5px dashed var(--accent2);
     cursor:help;
     transition:color .15s, border-color .15s, background-color .15s;
-    padding:0 1px;
+    padding:0 4px;
     border-radius:2px;
   }
   .term:hover, .term.active{
@@ -203,6 +203,14 @@
     pointer-events:none;
     transition:opacity .18s ease, transform .18s ease;
     font-weight:400;
+    max-height:70vh;
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+  }
+  #tooltip::-webkit-scrollbar{ width:6px; }
+  #tooltip::-webkit-scrollbar-thumb{
+    background:var(--border); border-radius:3px;
   }
   #tooltip.show{
     opacity:1;
@@ -495,7 +503,7 @@
 <body>
 
 <div class="progress" id="progress"></div>
-<div class="slide-indicator" id="indicator" onclick="toggleSlidePanel()" title="Buka daftar slide">1 / 14</div>
+<div class="slide-indicator" id="indicator" onclick="toggleSlidePanel()" title="Buka daftar slide">1 / 15</div>
 <div id="tooltip"></div>
 
 <!-- Floating button to open slide panel -->
@@ -517,7 +525,7 @@
              oninput="filterSlides(this.value)">
       <div class="jump-row">
         <label for="jumpNumber">Lompat ke slide:</label>
-        <input type="number" class="jump-number" id="jumpNumber" min="1" max="14" value="1"
+        <input type="number" class="jump-number" id="jumpNumber" min="1" max="15" value="1"
                onkeydown="if(event.key==='Enter'){event.preventDefault();jumpFromInput();}">
         <button class="jump-btn" onclick="jumpFromInput()">Go →</button>
       </div>
@@ -596,7 +604,6 @@
 
     <svg viewBox="0 0 800 450" style="width:100%;max-width:720px;height:auto;display:block;margin:6px auto;background:linear-gradient(180deg,rgba(15,23,42,.45),rgba(30,41,59,.45));border-radius:12px;border:1px solid var(--border);">
   <defs>
-    <!-- ====== DEFS ASLI (tidak diubah) ====== -->
     <marker id="arrowBlueMotif" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
       <polygon points="0 0, 10 4, 0 8" fill="#38bdf8"/>
     </marker>
@@ -608,7 +615,6 @@
       <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(56,189,248,.06)" stroke-width="1"/>
     </pattern>
 
-    <!-- ====== DEFS BARU: bidang segitiga ====== -->
     <linearGradient id="triGradMotif" x1="0" y1="60" x2="0" y2="380" gradientUnits="userSpaceOnUse">
       <stop offset="0%"  stop-color="#0891b2" stop-opacity=".12"/>
       <stop offset="55%" stop-color="#06b6d4" stop-opacity=".25"/>
@@ -624,22 +630,17 @@
     </clipPath>
   </defs>
 
-  <!-- Background grid (asli) -->
   <rect width="800" height="450" fill="url(#gridPatternMotif)"/>
 
-  <!-- ====== BARU: Bidang proyeksi segitiga ====== -->
-  <!-- Apex di titik start objek (600,60), base = garis Im(P) -->
   <polygon points="600,60 40,380 760,380"
            fill="url(#triGradMotif)"
            stroke="#22d3ee" stroke-width="1.2">
-    <!-- Stroke berdenyut sinkron dengan gerakan objek -->
     <animate attributeName="stroke-opacity"
              values=".4;.75;.4" dur="4s" repeatCount="indefinite"
              calcMode="spline" keyTimes="0;.5;1"
              keySplines=".4 0 .6 1; .4 0 .6 1"/>
   </polygon>
 
-  <!-- ====== BARU: Grid perspektif di dalam segitiga ====== -->
   <g clip-path="url(#triClipMotif)" stroke="#22d3ee" stroke-width=".6" opacity=".22">
     <line x1="600" y1="60" x2="220" y2="380"/>
     <line x1="600" y1="60" x2="400" y2="380"/>
@@ -649,9 +650,6 @@
     <line x1="180" y1="300" x2="720" y2="300"/>
   </g>
 
-  <!-- ====== BARU: Light pool yang bergerak ====== -->
-  <!-- Posisi X mengikuti objek: 600 → 480 → 600 -->
-  <!-- Makin dekat ke lantai, makin besar & makin terang -->
   <g clip-path="url(#triClipMotif)">
     <ellipse cy="380" rx="120" ry="35" fill="url(#lightPoolMotif)">
       <animate attributeName="cx"      values="600;480;600" dur="4s" repeatCount="indefinite"
@@ -663,36 +661,27 @@
     </ellipse>
   </g>
 
-  <!-- ====== SEMUA ELEMEN ASLI — TIDAK DIUBAH ====== -->
-
-  <!-- Im(P) line -->
   <line x1="40" y1="380" x2="760" y2="380" stroke="#22d3ee" stroke-width="3"/>
   <text x="45" y="408" fill="#22d3ee" font-size="13" font-weight="700" font-family="monospace">Im(P) — ruang hasil 1-dimensi</text>
 
-  <!-- Origin -->
   <circle cx="150" cy="380" r="7" fill="#e2e8f0" stroke="#0f172a" stroke-width="2"/>
   <text x="128" y="412" fill="#e2e8f0" font-size="14" font-weight="700" font-family="monospace">O</text>
 
-  <!-- Vector O → Px -->
   <line x1="150" y1="380" x2="480" y2="380" stroke="#4ade80" stroke-width="2.5" opacity=".85"/>
 
-  <!-- Px glow -->
   <circle cx="480" cy="380" r="20" fill="url(#glowGreenMotif)">
     <animate attributeName="r" values="20;32;20" dur="2s" repeatCount="indefinite"/>
   </circle>
   <circle cx="480" cy="380" r="9" fill="#4ade80" stroke="#0f172a" stroke-width="2"/>
   <text x="365" y="366" fill="#4ade80" font-size="14" font-weight="700" font-family="monospace">Px = P(x + δ)</text>
 
-  <!-- Static projection ray reference -->
   <line x1="600" y1="60" x2="480" y2="380" stroke="#fbbf24" stroke-width="2" stroke-dasharray="8,6" opacity=".4"/>
   <text x="608" y="52" fill="#fbbf24" font-size="12" font-family="monospace">δ ∈ ker(P)</text>
 
-  <!-- Ghost initial x -->
   <line x1="150" y1="380" x2="600" y2="60" stroke="#38bdf8" stroke-width="1.5" opacity=".22" stroke-dasharray="4,4"/>
   <circle cx="600" cy="60" r="6" fill="#38bdf8" opacity=".45"/>
   <text x="612" y="56" fill="#38bdf8" font-size="14" opacity=".55" font-family="monospace">x</text>
 
-  <!-- Animated projection line from x+δ to Px -->
   <line stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="5,5" opacity=".9">
     <animate attributeName="x1" values="600;480;600" dur="4s" repeatCount="indefinite"
              calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
@@ -702,7 +691,6 @@
     <animate attributeName="y2" values="380;380;380" dur="4s" repeatCount="indefinite"/>
   </line>
 
-  <!-- Animated vector O → x+δ -->
   <line x1="150" y1="380" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrowBlueMotif)">
     <animate attributeName="x2" values="600;480;600" dur="4s" repeatCount="indefinite"
              calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
@@ -710,7 +698,6 @@
              calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
   </line>
 
-  <!-- Animated marker -->
   <circle r="8" fill="#38bdf8" stroke="#0f172a" stroke-width="2">
     <animate attributeName="cx" values="600;480;600" dur="4s" repeatCount="indefinite"
              calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
@@ -718,7 +705,6 @@
              calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
   </circle>
 
-  <!-- Animated label -->
   <text font-size="16" font-weight="700" fill="#38bdf8" font-family="monospace">
     <animate attributeName="x" values="615;495;615" dur="4s" repeatCount="indefinite"
              calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
@@ -781,7 +767,7 @@
       </div>
     </div>
     <div class="box violet" style="margin-top:16px;">
-      💡 <b>Poin penting:</b> Proyeksi <i>bukan</i> pengganti <span class="term" data-term="ECC / QEC" data-def="<div><b>ECC (Error-Correcting Code):</b> Kode koreksi galat klasik (seperti Reed-Solomon atau Hamming) yang menyisipkan redundansi pada data agar penerima bisa mendeteksi dan memperbaiki bit yang rusak.<br><br><b>QEC (Quantum Error Correction):</b> Padanan ECC untuk sistem kuantum (seperti <i>surface code</i>), yang bertujuan mengatasi dekoherensi dan galat kuantum dengan menggunakan banyak qubit fisik untuk membentuk satu qubit logis.</div><div style='margin-top:10px;padding:8px 12px;background:rgba(248,113,113,0.1);border-left:3px solid #f87171;border-radius:4px;'><b>⚠ Posisi Naskah (Subbab 13.2 & 13.5.3):</b><br>Mekanisme proyeksi kernel dalam bab ini <b>BUKAN</b> pengganti ECC/QEC. ECC/QEC dapat mendeteksi dan memperbaiki <b>sembarang galat</b> secara umum, sedangkan proyeksi kernel hanya menghapus galat <b>selektif</b> yang arahnya tepat berada di dalam kernel (\(\delta \in \ker(P)\)).</div><div style='margin-top:10px;font-size:0.9em;color:#94a3b8;'><b>Analogi:</b> ECC/QEC seperti membawa kotak P3K untuk mengobati berbagai luka. Proyeksi kernel seperti memiliki kekebalan khusus yang membuat Anda tidak terluka <i>hanya jika</i> dipukul tepat dari arah tertentu (di dalam kernel), tapi Anda tetap butuh P3K jika dipukul dari arah lain.</div>">ECC/QEC</span>> umum ia menyediakan mekanisme aljabar untuk <b>kelas galat tertentu</b> yang memenuhi kondisi kernel.
+      💡 <b>Poin penting:</b> Proyeksi <i>bukan</i> pengganti <span class="term" data-term="ECC / QEC" data-def="<div><b>ECC (Error-Correcting Code):</b> Kode koreksi galat klasik (seperti Reed-Solomon atau Hamming) yang menyisipkan redundansi pada data agar penerima bisa mendeteksi dan memperbaiki bit yang rusak.<br><br><b>QEC (Quantum Error Correction):</b> Padanan ECC untuk sistem kuantum (seperti <i>surface code</i>), yang bertujuan mengatasi dekoherensi dan galat kuantum dengan menggunakan banyak qubit fisik untuk membentuk satu qubit logis.</div><div style='margin-top:10px;padding:8px 12px;background:rgba(248,113,113,0.1);border-left:3px solid #f87171;border-radius:4px;'><b>⚠ Posisi Naskah (Subbab 13.2 & 13.5.3):</b><br>Mekanisme proyeksi kernel dalam bab ini <b>BUKAN</b> pengganti ECC/QEC. ECC/QEC dapat mendeteksi dan memperbaiki <b>sembarang galat</b> secara umum, sedangkan proyeksi kernel hanya menghapus galat <b>selektif</b> yang arahnya tepat berada di dalam kernel (\(\delta \in \ker(P)\)).</div><div style='margin-top:10px;font-size:0.9em;color:#94a3b8;'><b>Analogi:</b> ECC/QEC seperti membawa kotak P3K untuk mengobati berbagai luka. Proyeksi kernel seperti memiliki kekebalan khusus yang membuat Anda tidak terluka <i>hanya jika</i> dipukul tepat dari arah tertentu (di dalam kernel), tapi Anda tetap butuh P3K jika dipukul dari arah lain.</div>">ECC/QEC</span> umum ia menyediakan mekanisme aljabar untuk <b>kelas galat tertentu</b> yang memenuhi kondisi kernel.
     </div>
   </div>
 </section>
@@ -800,7 +786,27 @@
         <ul>
           <li>$2^8 = 256$ elemen (byte)</li>
           <li>Karakteristik 2: $a + a = 0$</li>
-          <li>Penjumlahan ≙ XOR</li>
+          <li>Penjumlahan ≙ <span class="term" data-term="XOR (Exclusive OR)" data-def="
+  <div>
+    <b>XOR (Exclusive OR)</b> = operasi bitwise: hasil <b>1</b> jika bit <i>berbeda</i>, <b>0</b> jika <i>sama</i>. Di \(\mathbb{F}_{2^8}\), penjumlahan dua elemen didefinisikan sebagai XOR byte-per-byte.
+  </div>
+  <div style='margin-top:10px;padding:8px 12px;background:rgba(74,222,128,0.1);border-left:3px solid #4ade80;border-radius:4px;'>
+    <b>Mengapa XOR = +?</b> Karena \(a+a=0\) (karakteristik 2) dan XOR juga \(a\oplus a=0\); XOR involutif → jumlah = kurang. Contoh:
+    \(0x57 \oplus 0x83 = 0xD4\)
+    <span style='font-family:monospace;color:#94a3b8;'>
+      (<code>0101&nbsp;0111</code> \(\oplus\) <code>1000&nbsp;0011</code> = <code>1101&nbsp;0100</code>)
+    </span>.
+  </div>
+  <div style='margin-top:10px;padding:8px 12px;background:rgba(56,189,248,0.1);border-left:3px solid #38bdf8;border-radius:4px;'>
+    <b>Mengapa ditulis hex?</b> Karena \(16 = 2^4\), <b>1 digit hex = tepat 4 bit (1 nibble)</b>, sehingga <b>1 byte = 2 digit hex</b>. Hex memadatkan 8 bit biner menjadi 2 karakter <i>tanpa kehilangan struktur bit</i>, sehingga operasi XOR tetap terlihat langsung per nibble: <code>5⊕8=D</code>, <code>7⊕3=4</code>. (Desimal tidak cocok karena XOR hanya bermakna per bit, bukan per nilai numerik.)
+    <div style='margin-top:6px;color:#fbbf24;font-size:.92em;'>
+      ⚠ Perhatikan: \(7+3=10\) di desimal, tetapi \(7\oplus3=4\) karena XOR <b>tidak membawa carry</b> antar bit ia hanya membandingkan bit yang sejajar.
+    </div>
+  </div>
+  <div style='margin-top:10px;font-size:0.9em;color:#94a3b8;'>
+    <b>Peran Bab 13:</b> Dasar bukti \(P\mathbf{c}+P\mathbf{c}=0\) pada rekonstruksi pesan.
+  </div>
+">XOR</span></li>
         </ul>
       </div>
       <div>
@@ -1058,7 +1064,113 @@
   </div>
 </section>
 
-<!-- SLIDE 13: Security Analysis -->
+<!-- ★ SLIDE 13 BARU: Protokol Lengkap -->
+<section class="slide">
+  <span class="tag">13.2.9 · 13.3.1–13.3.3</span>
+  <h2>Protokol Lengkap: Dua Lapisan Terpisah</h2>
+  <div class="content">
+
+    <svg viewBox="0 0 1000 620" style="width:100%;height:auto;display:block;margin:8px auto;background:rgba(15,23,42,.35);border:1px solid var(--border);border-radius:12px;font-family:'Segoe UI',system-ui,sans-serif;">
+
+      <text x="250" y="30" fill="#4ade80" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="1">🔐 LAPISAN KRIPTOGRAFI</text>
+      <text x="750" y="30" fill="#a78bfa" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="1">📐 LAPISAN ALJABAR</text>
+      <line x1="500" y1="45" x2="500" y2="600" stroke="#334155" stroke-width="1.5" stroke-dasharray="6,6"/>
+
+      <rect x="40" y="55" width="420" height="42" rx="8" fill="rgba(74,222,128,.10)" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="250" y="81" fill="#e2e8f0" font-size="13" text-anchor="middle" font-weight="700">Password</text>
+      <line x1="250" y1="97" x2="250" y2="115" stroke="#4ade80" stroke-width="2" marker-end="url(#arrowG)"/>
+
+      <rect x="40" y="115" width="420" height="42" rx="8" fill="rgba(74,222,128,.10)" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="250" y="141" fill="#e2e8f0" font-size="13" text-anchor="middle" font-weight="700">scrypt (N=2¹⁴, r=8, p=1) → ikm</text>
+      <line x1="250" y1="157" x2="250" y2="175" stroke="#4ade80" stroke-width="2" marker-end="url(#arrowG)"/>
+
+      <rect x="40" y="175" width="420" height="42" rx="8" fill="rgba(74,222,128,.10)" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="250" y="201" fill="#e2e8f0" font-size="13" text-anchor="middle" font-weight="700">HKDF-SHA256 → 2 seed X25519</text>
+      <line x1="250" y1="217" x2="250" y2="235" stroke="#4ade80" stroke-width="2" marker-end="url(#arrowG)"/>
+
+      <rect x="40" y="235" width="420" height="42" rx="8" fill="rgba(74,222,128,.10)" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="250" y="261" fill="#e2e8f0" font-size="13" text-anchor="middle" font-weight="700">X25519 → shared secret s</text>
+
+      <line x1="250" y1="277" x2="250" y2="300" stroke="#4ade80" stroke-width="2"/>
+      <line x1="120" y1="300" x2="380" y2="300" stroke="#4ade80" stroke-width="2"/>
+      <line x1="120" y1="300" x2="120" y2="318" stroke="#4ade80" stroke-width="2" marker-end="url(#arrowG)"/>
+      <line x1="380" y1="300" x2="380" y2="318" stroke="#4ade80" stroke-width="2" marker-end="url(#arrowG)"/>
+
+      <rect x="20" y="318" width="200" height="42" rx="8" fill="rgba(74,222,128,.10)" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="120" y="338" fill="#e2e8f0" font-size="12" text-anchor="middle" font-weight="700">HKDF(salt="GCM-Salt",</text>
+      <text x="120" y="354" fill="#e2e8f0" font-size="12" text-anchor="middle" font-weight="700">info="AES-256-Key")</text>
+
+      <rect x="280" y="318" width="200" height="42" rx="8" fill="rgba(167,139,250,.10)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="380" y="338" fill="#e2e8f0" font-size="12" text-anchor="middle" font-weight="700">HKDF(salt="Algebra-Params",</text>
+      <text x="380" y="354" fill="#e2e8f0" font-size="12" text-anchor="middle" font-weight="700">info="algebra-seed")</text>
+
+      <line x1="120" y1="360" x2="120" y2="385" stroke="#4ade80" stroke-width="2" marker-end="url(#arrowG)"/>
+      <line x1="380" y1="360" x2="380" y2="385" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrowG)"/>
+
+      <rect x="20" y="385" width="200" height="38" rx="8" fill="rgba(74,222,128,.10)" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="120" y="409" fill="#4ade80" font-size="13" text-anchor="middle" font-weight="800">Kunci AES-256</text>
+
+      <rect x="280" y="385" width="200" height="38" rx="8" fill="rgba(167,139,250,.10)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="380" y="409" fill="#a78bfa" font-size="13" text-anchor="middle" font-weight="800">u, v, P_prv, P_pub, Q</text>
+
+      <line x1="40" y1="440" x2="460" y2="440" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="250" y="432" fill="#94a3b8" font-size="10" text-anchor="middle" font-style="italic">parameter siap</text>
+
+      <rect x="40" y="460" width="420" height="130" rx="8" fill="rgba(74,222,128,.06)" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="250" y="482" fill="#4ade80" font-size="13" text-anchor="middle" font-weight="800">ENKRIPSI · AES-256-GCM</text>
+      <text x="250" y="504" fill="#e2e8f0" font-size="12" text-anchor="middle">nonce acak 96-bit + AAD tetap</text>
+      <text x="250" y="524" fill="#e2e8f0" font-size="12" text-anchor="middle">payload JSON = { c, k, panjang }</text>
+      <text x="250" y="544" fill="#4ade80" font-size="12" text-anchor="middle" font-weight="700">→ Ciphertext + Auth Tag</text>
+      <text x="250" y="566" fill="#94a3b8" font-size="11" text-anchor="middle" font-style="italic">GCM mengenkapsulasi SEMUA output aljabar</text>
+
+      <rect x="540" y="460" width="420" height="130" rx="8" fill="rgba(167,139,250,.06)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="750" y="482" fill="#a78bfa" font-size="13" text-anchor="middle" font-weight="800">ENKRIPSI · ALJABAR (per blok)</text>
+      <text x="750" y="504" fill="#e2e8f0" font-size="12" text-anchor="middle">m′ᵢ = S(mᵢ)   ← S-Box</text>
+      <text x="750" y="524" fill="#e2e8f0" font-size="12" text-anchor="middle">eᵢ ← CSPRNG</text>
+      <text x="750" y="544" fill="#e2e8f0" font-size="12" text-anchor="middle">cᵢ = P_pub·m′ᵢ + Q·eᵢ</text>
+      <text x="750" y="564" fill="#e2e8f0" font-size="12" text-anchor="middle">kᵢ = m′ᵢ + P_prv·cᵢ</text>
+
+      <line x1="540" y1="525" x2="460" y2="525" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowA)"/>
+      <text x="500" y="518" fill="#fbbf24" font-size="10" text-anchor="middle" font-weight="700">{c, k}</text>
+
+      <g transform="translate(40, 600)">
+        <rect x="0" y="-10" width="14" height="14" fill="rgba(74,222,128,.25)" stroke="#4ade80"/>
+        <text x="20" y="2" fill="#94a3b8" font-size="11">Kriptografi</text>
+        <rect x="120" y="-10" width="14" height="14" fill="rgba(167,139,250,.25)" stroke="#a78bfa"/>
+        <text x="140" y="2" fill="#94a3b8" font-size="11">Aljabar</text>
+        <line x1="220" y1="-3" x2="250" y2="-3" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,4"/>
+        <text x="258" y="2" fill="#94a3b8" font-size="11">Data mengalir</text>
+      </g>
+
+      <defs>
+        <marker id="arrowG" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+          <polygon points="0 0, 9 3.5, 0 7" fill="#4ade80"/>
+        </marker>
+        <marker id="arrowA" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+          <polygon points="0 0, 9 3.5, 0 7" fill="#fbbf24"/>
+        </marker>
+      </defs>
+    </svg>
+
+    <div class="grid2" style="margin-top:14px;">
+      <div class="box green">
+        <b>🔐 Lapisan Kriptografi (kiri)</b>
+        <p style="font-size:.9em;margin-top:6px;">Menjamin <b>kerahasiaan</b> & <b>integritas</b> via AES-256-GCM, HKDF-SHA256, X25519. <b>Tidak</b> menyentuh isi aljabar hanya membungkusnya.</p>
+      </div>
+      <div class="box violet">
+        <b>📐 Lapisan Aljabar (kanan)</b>
+        <p style="font-size:.9em;margin-top:6px;">Menyediakan <b>penghapusan galat selektif</b> untuk \(\delta \in \ker(P_{\mathrm{prv}})\). <b>Tidak</b> memberi kerahasiaan hanya transformasi linear.</p>
+      </div>
+    </div>
+
+    <div class="box amber" style="margin-top:12px;">
+      ⚠ <b>Pemisahan tegas (13.2.9):</b> Data mengalir dari aljabar → kriptografi, <b>bukan</b> sebaliknya. Kompromi satu lapisan tidak otomatis membocorkan lapisan lain inilah inti <i>domain separation</i> HKDF.
+    </div>
+
+  </div>
+</section>
+
+<!-- SLIDE 14: Security Analysis -->
 <section class="slide">
   <span class="tag red">13.5 · Analisis Keamanan</span>
   <h2>Status Keamanan Komponen</h2>
@@ -1080,7 +1192,7 @@
   </div>
 </section>
 
-<!-- SLIDE 14: Conclusion -->
+<!-- SLIDE 15: Conclusion -->
 <section class="slide">
   <span class="tag green">13.6.4 · Kesimpulan</span>
   <h2>Apa yang Diklaim dan Tidak</h2>
@@ -1122,7 +1234,7 @@
 
 <div class="nav">
   <button onclick="prevSlide()" title="Sebelumnya (←)">←</button>
-  <span class="counter" id="counter" onclick="toggleSlidePanel()" style="cursor:pointer;" title="Buka daftar slide">1 / 14</span>
+  <span class="counter" id="counter" onclick="toggleSlidePanel()" style="cursor:pointer;" title="Buka daftar slide">1 / 15</span>
   <button onclick="nextSlide()" title="Berikutnya (→)">→</button>
 </div>
 
@@ -1145,7 +1257,6 @@
     if(window.MathJax && MathJax.typesetPromise){
       MathJax.typesetPromise();
     }
-    // Sync grid highlight if panel open
     const panel = document.getElementById('slidePanelOverlay');
     if(panel && panel.classList.contains('show')){
       updateSlideCards();
@@ -1162,7 +1273,6 @@
       const titleEl = slide.querySelector('h2') || slide.querySelector('h1');
       const tag = tagEl ? tagEl.textContent.trim() : '';
       let title = titleEl ? titleEl.textContent.trim() : ('Slide ' + (idx+1));
-      // Strip out any MathJax remnants for title
       title = title.replace(/\s+/g, ' ');
       return { index: idx, tag, title };
     });
@@ -1176,7 +1286,6 @@
         </div>
       </button>
     `).join('');
-    // Update jump input max
     const jn = document.getElementById('jumpNumber');
     jn.max = slides.length;
     jn.value = current + 1;
@@ -1208,7 +1317,6 @@
     hideTooltip();
     updateSlideCards();
     document.getElementById('slidePanelOverlay').classList.add('show');
-    // Reset search
     const s = document.getElementById('slideSearch');
     s.value = '';
     filterSlides('');
@@ -1244,7 +1352,6 @@
       card.style.display = match ? '' : 'none';
       if(match) visible++;
     });
-    // Optional: show empty state
     const grid = document.getElementById('slideGrid');
     let emptyMsg = grid.querySelector('.empty-state');
     if(visible === 0){
@@ -1263,32 +1370,22 @@
   /* ============ KEYBOARD ============ */
   document.addEventListener('keydown', e => {
     const isInput = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
-
-    // Esc always closes panel / tooltip
     if(e.key === 'Escape'){
       closeSlidePanel();
       hideTooltip();
       return;
     }
-
-    // Don't hijack keys while typing in an input
     if(isInput) return;
-
-    // M → toggle panel
     if(e.key === 'm' || e.key === 'M'){
       e.preventDefault();
       toggleSlidePanel();
       return;
     }
-
-    // 1-9 → quick jump
     if(/^[1-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey){
       e.preventDefault();
       jumpToSlide(parseInt(e.key) - 1);
       return;
     }
-
-    // Standard navigation
     if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); nextSlide(); }
     else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); prevSlide(); }
     else if(e.key === 'Home'){ showSlide(0); }
@@ -1318,19 +1415,17 @@
     function showTooltip(el){
     const title = el.dataset.term || el.textContent.trim();
     const def = el.dataset.def || 'Definisi tidak tersedia.';
-    
-    // Perubahan: escapeHtml(def) dihapus agar HTML bisa dirender
+
     tooltip.innerHTML = '<span class="tt-title">' + escapeHtml(title) + '</span>' +
                         '<span class="tt-body">' + def + '</span>' +
                         '<span class="tt-hint">Klik di luar untuk menutup</span>';
-                        
+
     tooltip.classList.add('show');
     if(currentTerm && currentTerm !== el) currentTerm.classList.remove('active');
     el.classList.add('active');
     currentTerm = el;
     positionTooltip(el);
 
-    // TAMBAHAN BARU: Meminta MathJax untuk merender rumus matematika di dalam tooltip
     if(window.MathJax && MathJax.typesetPromise){
       MathJax.typesetPromise([tooltip]).catch(function(err){ console.log(err.message); });
     }
@@ -1352,6 +1447,7 @@
     if(top + tt.height > window.innerHeight - pad){
       top = window.innerHeight - tt.height - pad;
     }
+    if(top < pad) top = pad;
     tooltip.style.left = left + 'px';
     tooltip.style.top = top + 'px';
   }
