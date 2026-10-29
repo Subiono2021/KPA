@@ -83,6 +83,8 @@
   ul{list-style:none;padding-left:0;}
   ul li{padding-left:26px;position:relative;margin:8px 0;line-height:1.6;}
   ul li::before{content:"▸";position:absolute;left:6px;color:var(--accent);font-weight:700;}
+  ul.plain li{padding-left:18px;}
+  ul.plain li::before{content:"•";color:var(--muted);}
 
   .pill-row{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;}
   .pill{padding:6px 14px;border-radius:20px;font-size:.85em;
@@ -96,6 +98,7 @@
     padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;
     font-size:.9em;transition:all .2s;font-family:inherit;}
   button:hover{background:var(--accent2);transform:translateY(-1px);}
+  button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px;}
   button.ghost{background:transparent;color:var(--fg);border:1px solid var(--border);}
   button.ghost:hover{background:var(--border);}
 
@@ -235,7 +238,7 @@
     font-style:italic;
   }
 
-  /* ===== SLIDE MENU BUTTON (top-left floating) ===== */
+  /* ===== SLIDE MENU BUTTON ===== */
   .slide-menu-btn{
     position:fixed;
     top:20px;
@@ -263,6 +266,7 @@
     border-color:var(--accent);
     transform:translateY(-1px);
   }
+  .slide-menu-btn:focus-visible{outline:3px solid var(--accent2);outline-offset:2px;}
   .slide-menu-btn .mb-icon{font-size:1.05em;}
 
   /* ===== SLIDE PANEL OVERLAY ===== */
@@ -331,6 +335,7 @@
     justify-content:center;
   }
   .close-btn:hover{background:var(--red);color:#fff;border-color:var(--red);}
+  .close-btn:focus-visible{outline:3px solid var(--accent2);outline-offset:2px;}
 
   .slide-panel-search{
     padding:14px 22px;
@@ -421,6 +426,7 @@
     background:rgba(56,189,248,.08);
     transform:translateX(3px);
   }
+  .slide-card:focus-visible{outline:3px solid var(--accent2);outline-offset:2px;}
   .slide-card.current{
     border-color:var(--accent);
     background:rgba(56,189,248,.14);
@@ -488,7 +494,7 @@
 
   @media (max-width:900px){
     .slide{padding:40px 24px 120px;}
-    .grid2,.two-col,.grid3{grid-template-columns:1fr;}
+    .grid2,.grid3{grid-template-columns:1fr;}
     .slide h1{font-size:1.8em;}
     .slide h2{font-size:1.4em;}
     .title-slide h1{font-size:2em;}
@@ -498,21 +504,24 @@
     .slide-panel-overlay{padding:12px;}
     .slide-panel-header,.slide-panel-search,.slide-panel-footer{padding-left:16px;padding-right:16px;}
   }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important;}
+    .slide{transform:none!important;}
+  }
 </style>
 </head>
 <body>
 
 <div class="progress" id="progress"></div>
-<div class="slide-indicator" id="indicator" onclick="toggleSlidePanel()" title="Buka daftar slide">1 / 15</div>
+<div class="slide-indicator" id="indicator" onclick="toggleSlidePanel()" title="Buka daftar slide">1 / 16</div>
 <div id="tooltip"></div>
 
-<!-- Floating button to open slide panel -->
 <button class="slide-menu-btn" onclick="toggleSlidePanel()" title="Daftar slide (M)">
   <span class="mb-icon">☰</span>
   <span>Slides</span>
 </button>
 
-<!-- Slide panel overlay -->
 <div class="slide-panel-overlay" id="slidePanelOverlay" onclick="closeSlidePanel()">
   <div class="slide-panel" onclick="event.stopPropagation()">
     <div class="slide-panel-header">
@@ -525,14 +534,14 @@
              oninput="filterSlides(this.value)">
       <div class="jump-row">
         <label for="jumpNumber">Lompat ke slide:</label>
-        <input type="number" class="jump-number" id="jumpNumber" min="1" max="15" value="1"
+        <input type="number" class="jump-number" id="jumpNumber" min="1" max="16" value="1"
                onkeydown="if(event.key==='Enter'){event.preventDefault();jumpFromInput();}">
         <button class="jump-btn" onclick="jumpFromInput()">Go →</button>
       </div>
     </div>
     <div class="slide-grid" id="slideGrid"></div>
     <div class="slide-panel-footer">
-      💡 <span class="kbd">M</span> buka/tutup · <span class="kbd">1</span>–<span class="kbd">9</span> lompat cepat · <span class="kbd">Esc</span> tutup · <span class="kbd">←</span>/<span class="kbd">→</span> navigasi
+      💡 <span class="kbd">M</span> buka/tutup · <span class="kbd">1</span>–<span class="kbd">9</span>/<span class="kbd">0</span> lompat cepat · <span class="kbd">Esc</span> tutup · <span class="kbd">←</span>/<span class="kbd">→</span> navigasi
     </div>
   </div>
 </div>
@@ -557,7 +566,7 @@
     💡 Arahkan kursor / tap pada istilah <span class="term" data-term="Istilah Bergaris Putus-putus" data-def="Kata atau frasa yang ditandai garis bawah putus-putus memiliki tooltip berisi definisi singkat. Hover di desktop, tap di mobile.">bergaris putus-putus</span> untuk melihat definisi
   </div>
   <p class="meta">
-    <span class="kbd">→</span> lanjut · <span class="kbd">←</span> kembali · <span class="kbd">M</span> daftar slide · <span class="kbd">1</span>–<span class="kbd">9</span> lompat cepat
+    <span class="kbd">→</span> lanjut · <span class="kbd">←</span> kembali · <span class="kbd">M</span> daftar slide · <span class="kbd">1</span>–<span class="kbd">9</span>/<span class="kbd">0</span> lompat cepat
   </p>
 </section>
 
@@ -590,7 +599,7 @@
 </section>
 
 
-<!-- SLIDE BARU: Motivasi Visual -->
+<!-- SLIDE 3: Motivasi Visual -->
 <section class="slide">
   <span class="tag amber">Motivasi Visual</span>
   <h2>Bagaimana Proyeksi "Menghapus" Galat?</h2>
@@ -602,7 +611,7 @@
       Objek yang bergeser <i>sejajar sinar</i> (δ ∈ ker) <b>tidak mengubah bayangannya</b>.
     </p>
 
-    <svg viewBox="0 0 800 450" style="width:100%;max-width:720px;height:auto;display:block;margin:6px auto;background:linear-gradient(180deg,rgba(15,23,42,.45),rgba(30,41,59,.45));border-radius:12px;border:1px solid var(--border);">
+    <svg viewBox="0 0 800 450" role="img" aria-label="Ilustrasi proyeksi: objek bergeser sejajar arah kernel tidak mengubah bayangan Px" style="width:100%;max-width:720px;height:auto;display:block;margin:6px auto;background:linear-gradient(180deg,rgba(15,23,42,.45),rgba(30,41,59,.45));border-radius:12px;border:1px solid var(--border);">
   <defs>
     <marker id="arrowBlueMotif" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
       <polygon points="0 0, 10 4, 0 8" fill="#38bdf8"/>
@@ -737,7 +746,7 @@
   </div>
 </section>
 
-<!-- SLIDE 3: Latar Belakang -->
+<!-- SLIDE 4: Latar Belakang -->
 <section class="slide">
   <span class="tag">13.1 · Pendahuluan</span>
   <h2>Proyeksi & Kernel: Intuisi Dasar</h2>
@@ -772,7 +781,7 @@
   </div>
 </section>
 
-<!-- SLIDE 4: F_2^8 -->
+<!-- SLIDE 5: F_2^8 -->
 <section class="slide">
   <span class="tag">13.2.1 · Landasan Teori</span>
   <h2>Lapangan Galois $\mathbb{F}_{2^8}$</h2>
@@ -831,7 +840,7 @@
   </div>
 </section>
 
-<!-- SLIDE 5: Rank-1 Projection -->
+<!-- SLIDE 6: Rank-1 Projection -->
 <section class="slide">
   <span class="tag">13.2.3–13.2.4</span>
   <h2>Proyeksi Rank-1 & Struktur Kernel</h2>
@@ -858,25 +867,26 @@
   </div>
 </section>
 
-<!-- SLIDE 6: Theorem (Interactive) -->
+<!-- SLIDE 7: Theorem (Interactive) — typo R fixed to F, plus verifikasi P·δ -->
 <section class="slide">
   <span class="tag green">Teorema 1 · 13.2.5</span>
   <h2>Invariansi Kernel Demo Interaktif</h2>
   <div class="content">
     <div class="formula" style="background:rgba(74,222,128,.12);border-color:var(--green);font-size:1.15em;">
-      <span class="term" data-term="Domain Variabel x" data-def="<div>Secara matematis, \(x\) adalah anggota dari <b>ruang vektor</b> \(V\), yang dinotasikan sebagai:<br><div style='text-align:center;margin:8px 0;font-size:1.1em;'>\(x \in V = \mathbb{F}_{2^8}^{\,k}\)</div>Artinya, \(x\) adalah sebuah vektor (berukuran \(k \times 1\)) yang terdiri dari \(k\) buah elemen, di mana setiap elemennya adalah byte (0–255).</div><div style='margin-top:10px;padding:8px 12px;background:rgba(74,222,128,0.1);border-left:3px solid #4ade80;border-radius:4px;'><b>Dalam Konteks Protokol (Bab 13):</b><br>1. Saat Enkripsi (Alice): \(x\) bisa berupa <b>plaintext</b> per blok yang sudah di-S-Box (\(\mathbf{m}_i' \in V\)).<br>2. Saat Transmisi: \(x\) bisa berupa <b>ciphertext aljabar</b> per blok (\(\mathbf{c}_i \in V\)).</div><div style='margin-top:10px;font-size:0.9em;color:#fbbf24;'><b>Mengapa 'untuk setiap x'?</b><br>Karena teorema ini berlaku universal untuk <b>seluruh anggota ruang vektor V</b>. Tidak peduli apa isi vektor pesan Anda, selama galatnya (\(\delta\)) berada di dalam kernel, hasil proyeksinya akan tetap sama persis.</div>">Jika $\delta \in \ker(P)$ maka $P(x + \delta) = Px$ untuk setiap $x\in\mathbb{R}_{2^8}^k$.</span>
+      <span class="term" data-term="Domain Variabel x" data-def="<div>Secara matematis, \(x\) adalah anggota dari <b>ruang vektor</b> \(V\), yang dinotasikan sebagai:<br><div style='text-align:center;margin:8px 0;font-size:1.1em;'>\(x \in V = \mathbb{F}_{2^8}^{\,k}\)</div>Artinya, \(x\) adalah sebuah vektor (berukuran \(k \times 1\)) yang terdiri dari \(k\) buah elemen, di mana setiap elemennya adalah byte (0–255).</div><div style='margin-top:10px;padding:8px 12px;background:rgba(74,222,128,0.1);border-left:3px solid #4ade80;border-radius:4px;'><b>Dalam Konteks Protokol (Bab 13):</b><br>1. Saat Enkripsi (Alice): \(x\) bisa berupa <b>plaintext</b> per blok yang sudah di-S-Box (\(\mathbf{m}_i' \in V\)).<br>2. Saat Transmisi: \(x\) bisa berupa <b>ciphertext aljabar</b> per blok (\(\mathbf{c}_i \in V\)).</div><div style='margin-top:10px;font-size:0.9em;color:#fbbf24;'><b>Mengapa 'untuk setiap x'?</b><br>Karena teorema ini berlaku universal untuk <b>seluruh anggota ruang vektor V</b>. Tidak peduli apa isi vektor pesan Anda, selama galatnya (\(\delta\)) berada di dalam kernel, hasil proyeksinya akan tetap sama persis.</div>">Jika $\delta \in \ker(P)$ maka $P(x + \delta) = Px$ untuk setiap $x\in\mathbb{F}_{2^8}^k$.</span>
     </div>
     <p style="color:var(--muted);font-size:.92em;margin-bottom:6px;">
       Sifat <span class="term" data-term="Kernel Invariant (Invarian Kernel)" data-def="<div>Sifat di mana hasil suatu transformasi <b>tidak berubah</b> walaupun inputnya ditambahkan dengan vektor tertentu yang berada di dalam kernel.</div><div style='margin-top:10px;padding:8px 12px;background:rgba(56,189,248,0.1);border-left:3px solid #38bdf8;border-radius:4px;'><b>Secara Matematis:</b><br>Jika $\delta \in \ker(P)$, maka:<br>\(P(x + \delta) = Px\)</div><div style='margin-top:10px;font-size:0.9em;color:#94a3b8;'><b>Intuisi:</b> Bayangkan memproyeksikan objek 3D ke dinding 2D. Jika objek digeser sejajar dengan arah sinar proyeksi (menjauh/mendekat), bayangan di dinding tidak berubah. Vektor pergeseran inilah yang disebut <i>kernel</i>.</div>">invariansi kernel</span> berlaku <b>eksak</b> bukan aproksimasi.
     </p>
     <div class="demo-area">
-      <p style="color:var(--muted);margin-bottom:12px;">Klik untuk melihat efek galat pada proyeksi rank-1 $P = uv^T$ di $\mathbb{F}_{2^8}$, $k=4$:</p>
+      <p style="color:var(--muted);margin-bottom:12px;">Klik untuk melihat efek galat pada proyeksi rank-1 $P = uv^T$ di $\mathbb{F}_{2^8}$, $k=4$ (dengan $u=(1,2,4,8)$, $v=(1,0,0,0)$, sehingga $v^Tu=1$ — contoh idempoten):</p>
       <div class="demo-controls">
         <button onclick="runKernelDemo('in')">δ ∈ ker(P)</button>
         <button onclick="runKernelDemo('out')">δ ∉ ker(P)</button>
         <button class="ghost" onclick="resetKernelDemo()">Reset</button>
       </div>
       <div class="matrix-output" id="kernelDemo">
+        <div class="mat"><div class="label">P · δ</div><div id="pd-out">—</div></div>
         <div class="mat"><div class="label">P · x</div><div id="px-out">—</div></div>
         <div class="mat"><div class="label">P · (x + δ)</div><div id="pxd-out">—</div></div>
         <div class="mat"><div class="label">Hasil</div><div id="kernel-result" style="padding:10px;font-weight:700;">—</div></div>
@@ -885,7 +895,7 @@
   </div>
 </section>
 
-<!-- SLIDE 7: Selective Error Removal -->
+<!-- SLIDE 8: Selective Error Removal -->
 <section class="slide">
   <span class="tag amber">13.2.6</span>
   <h2>Penghapusan Galat Selektif</h2>
@@ -910,7 +920,7 @@
   </div>
 </section>
 
-<!-- SLIDE 8: Q = I + P -->
+<!-- SLIDE 9: Q = I + P -->
 <section class="slide">
   <span class="tag">13.2.8</span>
   <h2>Operator $Q = I + P$ pada Karakteristik 2</h2>
@@ -945,7 +955,7 @@
   </div>
 </section>
 
-<!-- SLIDE 9: Layered Architecture -->
+<!-- SLIDE 10: Layered Architecture -->
 <section class="slide">
   <span class="tag">13.2.9</span>
   <h2>Pemisahan Lapisan Aljabar & Kriptografi</h2>
@@ -975,7 +985,7 @@
   </div>
 </section>
 
-<!-- SLIDE 10: Protocol - Key Derivation -->
+<!-- SLIDE 11: Protocol - Key Derivation -->
 <section class="slide">
   <span class="tag">13.3.1</span>
   <h2>Penurunan Parameter Protokol</h2>
@@ -1004,7 +1014,7 @@
   </div>
 </section>
 
-<!-- SLIDE 11: Encryption -->
+<!-- SLIDE 12: Encryption -->
 <section class="slide">
   <span class="tag">13.3.2</span>
   <h2>Enkripsi (Alice)</h2>
@@ -1042,7 +1052,7 @@
   </div>
 </section>
 
-<!-- SLIDE 12: Decryption -->
+<!-- SLIDE 13: Decryption -->
 <section class="slide">
   <span class="tag">13.3.3</span>
   <h2>Dekripsi (Bob)</h2>
@@ -1064,13 +1074,13 @@
   </div>
 </section>
 
-<!-- ★ SLIDE 13 BARU: Protokol Lengkap -->
+<!-- SLIDE 14: Protokol Lengkap -->
 <section class="slide">
   <span class="tag">13.2.9 · 13.3.1–13.3.3</span>
   <h2>Protokol Lengkap: Dua Lapisan Terpisah</h2>
   <div class="content">
 
-    <svg viewBox="0 0 1000 620" style="width:100%;height:auto;display:block;margin:8px auto;background:rgba(15,23,42,.35);border:1px solid var(--border);border-radius:12px;font-family:'Segoe UI',system-ui,sans-serif;">
+    <svg viewBox="0 0 1000 620" role="img" aria-label="Diagram dua lapisan: kriptografi (kiri) dan aljabar (kanan)" style="width:100%;height:auto;display:block;margin:8px auto;background:rgba(15,23,42,.35);border:1px solid var(--border);border-radius:12px;font-family:'Segoe UI',system-ui,sans-serif;">
 
       <text x="250" y="30" fill="#4ade80" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="1">🔐 LAPISAN KRIPTOGRAFI</text>
       <text x="750" y="30" fill="#a78bfa" font-size="15" font-weight="800" text-anchor="middle" letter-spacing="1">📐 LAPISAN ALJABAR</text>
@@ -1170,7 +1180,7 @@
   </div>
 </section>
 
-<!-- SLIDE 14: Security Analysis -->
+<!-- SLIDE 15: Security Analysis -->
 <section class="slide">
   <span class="tag red">13.5 · Analisis Keamanan</span>
   <h2>Status Keamanan Komponen</h2>
@@ -1192,7 +1202,7 @@
   </div>
 </section>
 
-<!-- SLIDE 15: Conclusion -->
+<!-- SLIDE 16: Conclusion -->
 <section class="slide">
   <span class="tag green">13.6.4 · Kesimpulan</span>
   <h2>Apa yang Diklaim dan Tidak</h2>
@@ -1230,11 +1240,77 @@
   </div>
 </section>
 
+<!-- ★ SLIDE 17 (BARU): Rangkuman & Catatan Teknis -->
+<section class="slide">
+  <span class="tag amber">Rangkuman</span>
+  <h2>Rangkuman Bab 13 & Catatan Teknis Deck</h2>
+  <div class="content scrollable">
+
+    <div class="grid2">
+      <div class="box violet">
+        <b>📐 Inti Matematis</b>
+        <p style="font-size:.92em;margin-top:6px;">Untuk \(P=uv^T\) atas \(\mathbb{F}_{2^8}\):</p>
+        <div class="formula" style="margin:8px 0;">
+          \(P^2=(v^Tu)P,\quad \ker(P)=\ker(v^T)\)
+        </div>
+        <p style="font-size:.9em;color:var(--muted);">
+          Jika \(\delta\in\ker(P)\), maka \(P(x+\delta)=Px\) — <b>eksak</b>, bukan aproksimasi.
+        </p>
+      </div>
+      <div class="box green">
+        <b>🔐 Inti Kriptografis</b>
+        <p style="font-size:.92em;margin-top:6px;">
+          Kerahasiaan & integritas <b>hanya</b> dari AES-256-GCM + HKDF-SHA256 + X25519.
+        </p>
+        <p style="font-size:.9em;color:var(--muted);">
+          Lapisan aljabar <b>tidak</b> memberi kerahasiaan: \(P_{\text{prv}}\) dapat dipulihkan via sistem linear \(\mathcal{O}(k^3)\) dalam model KPA.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:14px;">
+      <div class="box green">
+        <b>✓ Yang Dicapai</b>
+        <ul class="plain" style="font-size:.9em;margin-top:6px;">
+          <li>Formulasi rank-1 → kernel → invariansi</li>
+          <li>Arsitektur dua lapisan terpisah</li>
+          <li>Verifikasi komputasional SageMath</li>
+        </ul>
+      </div>
+      <div class="box red">
+        <b>✗ Yang Tidak Diklaim</b>
+        <ul class="plain" style="font-size:.9em;margin-top:6px;">
+          <li>Kerahasiaan mandiri lapisan aljabar</li>
+          <li>Pengganti umum ECC/QEC</li>
+          <li>Keamanan pasca-kuantum penuh (X25519 rentan Shor)</li>
+          <li>Hasil kuantitatif NISQ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="box" style="margin-top:14px;">
+      <b>🛠 Catatan Teknis Deck (untuk pengembang)</b>
+      <ul class="plain" style="font-size:.88em;margin-top:6px;color:var(--muted);">
+        <li><b>Demo kernel:</b> \(u=(1,2,4,8)\), \(v=(1,0,0,0)\) → \(v^Tu=1\) (idempoten) — kini dinyatakan eksplisit di slide agar konsisten dengan narasi.</li>
+        <li><b>MathJax:</b> dirender per-slide (bukan seluruh dokumen) untuk efisiensi; tooltip direposisi setelah render selesai.</li>
+        <li><b>Navigasi:</b> tombol <span class="kbd">1</span>–<span class="kbd">9</span> untuk slide 1–9, <span class="kbd">0</span> untuk slide 10; slide 11–17 lewat panel (M).</li>
+        <li><b>Aksesibilitas:</b> ditambahkan <code>:focus-visible</code> dan <code>prefers-reduced-motion</code>.</li>
+        <li><b>Referensi:</b> daftar bacaan lanjutan dari naskah (max-plus/min-plus, wavelet) belum disertakan — dapat ditambahkan sebagai slide 18 jika diperlukan.</li>
+      </ul>
+    </div>
+
+    <div class="box violet" style="margin-top:14px;text-align:center;">
+      <b>Kontribusi inti:</b> fondasi matematis untuk penelitian pada persimpangan aljabar abstrak, kriptografi, dan mitigasi galat — dengan klaim yang dibatasi pada bukti dan verifikasi.
+    </div>
+
+  </div>
+</section>
+
 </div>
 
 <div class="nav">
   <button onclick="prevSlide()" title="Sebelumnya (←)">←</button>
-  <span class="counter" id="counter" onclick="toggleSlidePanel()" style="cursor:pointer;" title="Buka daftar slide">1 / 15</span>
+  <span class="counter" id="counter" onclick="toggleSlidePanel()" style="cursor:pointer;" title="Buka daftar slide">1 / 17</span>
   <button onclick="nextSlide()" title="Berikutnya (→)">→</button>
 </div>
 
@@ -1254,8 +1330,10 @@
     document.getElementById('counter').textContent = (current+1) + ' / ' + slides.length;
     document.getElementById('indicator').textContent = (current+1) + ' / ' + slides.length;
     hideTooltip();
+    /* Render MathJax hanya untuk slide aktif — jauh lebih efisien */
     if(window.MathJax && MathJax.typesetPromise){
-      MathJax.typesetPromise();
+      MathJax.typesetClear && MathJax.typesetClear([slides[current]]);
+      MathJax.typesetPromise([slides[current]]).catch(function(){});
     }
     const panel = document.getElementById('slidePanelOverlay');
     if(panel && panel.classList.contains('show')){
@@ -1265,7 +1343,7 @@
   function nextSlide(){ showSlide(current+1); }
   function prevSlide(){ showSlide(current-1); }
 
-  /* ============ SLIDE PANEL (jump-to-slide) ============ */
+  /* ============ SLIDE PANEL ============ */
   function buildSlideGrid(){
     const grid = document.getElementById('slideGrid');
     const cards = Array.from(slides).map((slide, idx) => {
@@ -1306,11 +1384,8 @@
 
   function toggleSlidePanel(){
     const overlay = document.getElementById('slidePanelOverlay');
-    if(overlay.classList.contains('show')){
-      closeSlidePanel();
-    } else {
-      openSlidePanel();
-    }
+    if(overlay.classList.contains('show')) closeSlidePanel();
+    else openSlidePanel();
   }
 
   function openSlidePanel(){
@@ -1381,9 +1456,11 @@
       toggleSlidePanel();
       return;
     }
-    if(/^[1-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey){
+    /* 1-9 untuk slide 1-9; 0 untuk slide 10 */
+    if(/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey){
       e.preventDefault();
-      jumpToSlide(parseInt(e.key) - 1);
+      const n = e.key === '0' ? 10 : parseInt(e.key);
+      jumpToSlide(n - 1);
       return;
     }
     if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); nextSlide(); }
@@ -1407,12 +1484,12 @@
     }
   }, {passive:true});
 
-  /* ============ TOOLTIP SYSTEM ============ */
+  /* ============ TOOLTIP ============ */
   const tooltip = document.getElementById('tooltip');
   let currentTerm = null;
   const canHover = window.matchMedia('(hover: hover)').matches;
 
-    function showTooltip(el){
+  function showTooltip(el){
     const title = el.dataset.term || el.textContent.trim();
     const def = el.dataset.def || 'Definisi tidak tersedia.';
 
@@ -1427,7 +1504,9 @@
     positionTooltip(el);
 
     if(window.MathJax && MathJax.typesetPromise){
-      MathJax.typesetPromise([tooltip]).catch(function(err){ console.log(err.message); });
+      MathJax.typesetPromise([tooltip])
+        .then(() => positionTooltip(el))  /* re-position setelah MathJax render */
+        .catch(function(){});
     }
   }
 
@@ -1518,25 +1597,31 @@
     const x = [0x10, 0x20, 0x30, 0x40];
     const delta = kind === 'in' ? [0, 1, 0, 0] : [1, 0, 0, 0];
     const xd = x.map((v, i) => v ^ delta[i]);
+    const pd = applyP(delta);
     const px = applyP(x);
     const pxd = applyP(xd);
     const same = px.every((v, i) => v === pxd[i]);
+    const deltaIsZero = pd.every(v => v === 0);
 
+    document.getElementById('pd-out').innerHTML = vecToMat(pd);
     document.getElementById('px-out').innerHTML = vecToMat(px);
     document.getElementById('pxd-out').innerHTML = vecToMat(pxd);
     const res = document.getElementById('kernel-result');
     if(kind === 'in'){
-      res.innerHTML = '<span style="color:#4ade80;">✓ Sama</span><br><span style="font-size:.75em;color:#94a3b8;">δ ∈ ker(P)</span>';
+      res.innerHTML = '<span style="color:#4ade80;">✓ P·δ = 0<br>P(x+δ) = Px</span>' +
+                      '<br><span style="font-size:.75em;color:#94a3b8;">δ ∈ ker(P)</span>';
     } else {
       if(same){
         res.innerHTML = '<span style="color:#fbbf24;">= (kebetulan)</span><br><span style="font-size:.75em;color:#94a3b8;">δ ∉ ker(P)</span>';
       } else {
-        res.innerHTML = '<span style="color:#f87171;">✗ Berbeda</span><br><span style="font-size:.75em;color:#94a3b8;">δ ∉ ker(P)</span>';
+        res.innerHTML = '<span style="color:#f87171;">✗ P·δ ≠ 0<br>P(x+δ) ≠ Px</span>' +
+                        '<br><span style="font-size:.75em;color:#94a3b8;">δ ∉ ker(P)</span>';
       }
     }
     if(window.MathJax) MathJax.typesetPromise();
   }
   function resetKernelDemo(){
+    document.getElementById('pd-out').innerHTML = '—';
     document.getElementById('px-out').innerHTML = '—';
     document.getElementById('pxd-out').innerHTML = '—';
     document.getElementById('kernel-result').innerHTML = '—';
@@ -1546,7 +1631,7 @@
   buildSlideGrid();
   showSlide(0);
   window.addEventListener('load', () => {
-    if(window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+    if(window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([slides[0]]);
   });
 </script>
 </body>
