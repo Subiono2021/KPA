@@ -514,7 +514,7 @@
 <body>
 
 <div class="progress" id="progress"></div>
-<div class="slide-indicator" id="indicator" onclick="toggleSlidePanel()" title="Buka daftar slide">1 / 16</div>
+<div class="slide-indicator" id="indicator" onclick="toggleSlidePanel()" title="Buka daftar slide">1 / 18</div>
 <div id="tooltip"></div>
 
 <button class="slide-menu-btn" onclick="toggleSlidePanel()" title="Daftar slide (M)">
@@ -534,7 +534,7 @@
              oninput="filterSlides(this.value)">
       <div class="jump-row">
         <label for="jumpNumber">Lompat ke slide:</label>
-        <input type="number" class="jump-number" id="jumpNumber" min="1" max="16" value="1"
+        <input type="number" class="jump-number" id="jumpNumber" min="1" max="18" value="1"
                onkeydown="if(event.key==='Enter'){event.preventDefault();jumpFromInput();}">
         <button class="jump-btn" onclick="jumpFromInput()">Go →</button>
       </div>
@@ -611,10 +611,13 @@
       Objek yang bergeser <i>sejajar sinar</i> (δ ∈ ker) <b>tidak mengubah bayangannya</b>.
     </p>
 
-    <svg viewBox="0 0 800 450" role="img" aria-label="Ilustrasi proyeksi: objek bergeser sejajar arah kernel tidak mengubah bayangan Px" style="width:100%;max-width:720px;height:auto;display:block;margin:6px auto;background:linear-gradient(180deg,rgba(15,23,42,.45),rgba(30,41,59,.45));border-radius:12px;border:1px solid var(--border);">
+    <svg viewBox="0 0 800 450" role="img" aria-label="Ilustrasi proyeksi: objek x dan x+δ bergeser sejajar arah kernel, keduanya memproyeksikan ke titik Px yang sama" style="width:100%;max-width:720px;height:auto;display:block;margin:6px auto;background:linear-gradient(180deg,rgba(15,23,42,.45),rgba(30,41,59,.45));border-radius:12px;border:1px solid var(--border);">
   <defs>
     <marker id="arrowBlueMotif" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
       <polygon points="0 0, 10 4, 0 8" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrowAmberMotif" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#fbbf24"/>
     </marker>
     <radialGradient id="glowGreenMotif">
       <stop offset="0%" stop-color="#4ade80" stop-opacity=".65"/>
@@ -623,15 +626,14 @@
     <pattern id="gridPatternMotif" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(56,189,248,.06)" stroke-width="1"/>
     </pattern>
-
     <linearGradient id="triGradMotif" x1="0" y1="60" x2="0" y2="380" gradientUnits="userSpaceOnUse">
       <stop offset="0%"  stop-color="#0891b2" stop-opacity=".12"/>
       <stop offset="55%" stop-color="#06b6d4" stop-opacity=".25"/>
       <stop offset="100%" stop-color="#22d3ee" stop-opacity=".42"/>
     </linearGradient>
     <radialGradient id="lightPoolMotif" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"  stop-color="#38bdf8" stop-opacity=".95"/>
-      <stop offset="40%" stop-color="#22d3ee" stop-opacity=".5"/>
+      <stop offset="0%"  stop-color="#38bdf8" stop-opacity=".85"/>
+      <stop offset="40%" stop-color="#22d3ee" stop-opacity=".45"/>
       <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
     </radialGradient>
     <clipPath id="triClipMotif">
@@ -659,68 +661,81 @@
     <line x1="180" y1="300" x2="720" y2="300"/>
   </g>
 
+  <!-- Light pool dikunci di Px (statis) -->
   <g clip-path="url(#triClipMotif)">
-    <ellipse cy="380" rx="120" ry="35" fill="url(#lightPoolMotif)">
-      <animate attributeName="cx"      values="600;480;600" dur="4s" repeatCount="indefinite"
+    <ellipse cx="480" cy="380" rx="150" ry="35" fill="url(#lightPoolMotif)">
+      <animate attributeName="rx"      values="110;150;110" dur="4s" repeatCount="indefinite"
                calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-      <animate attributeName="rx"      values="80;170;80"   dur="4s" repeatCount="indefinite"
-               calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-      <animate attributeName="opacity" values=".3;1;.3"     dur="4s" repeatCount="indefinite"
+      <animate attributeName="opacity" values=".55;.9;.55"   dur="4s" repeatCount="indefinite"
                calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
     </ellipse>
   </g>
 
+  <!-- Lantai Im(P) -->
   <line x1="40" y1="380" x2="760" y2="380" stroke="#22d3ee" stroke-width="3"/>
   <text x="45" y="408" fill="#22d3ee" font-size="13" font-weight="700" font-family="monospace">Im(P) — ruang hasil 1-dimensi</text>
 
+  <!-- Titik asal O -->
   <circle cx="150" cy="380" r="7" fill="#e2e8f0" stroke="#0f172a" stroke-width="2"/>
   <text x="128" y="412" fill="#e2e8f0" font-size="14" font-weight="700" font-family="monospace">O</text>
 
+  <!-- Sinar proyeksi utama: dari sumber x (statis) ke Px -->
   <line x1="150" y1="380" x2="480" y2="380" stroke="#4ade80" stroke-width="2.5" opacity=".85"/>
 
+  <!-- Px (statis) -->
   <circle cx="480" cy="380" r="20" fill="url(#glowGreenMotif)">
-    <animate attributeName="r" values="20;32;20" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="20;30;20" dur="2s" repeatCount="indefinite"/>
   </circle>
   <circle cx="480" cy="380" r="9" fill="#4ade80" stroke="#0f172a" stroke-width="2"/>
-  <text x="365" y="366" fill="#4ade80" font-size="14" font-weight="700" font-family="monospace">Px = P(x + δ)</text>
+  <text x="360" y="366" fill="#4ade80" font-size="14" font-weight="700" font-family="monospace">Px = P(x + δ)</text>
 
-  <line x1="600" y1="60" x2="480" y2="380" stroke="#fbbf24" stroke-width="2" stroke-dasharray="8,6" opacity=".4"/>
-  <text x="608" y="52" fill="#fbbf24" font-size="12" font-family="monospace">δ ∈ ker(P)</text>
+  <!-- Garis sinar (kernel direction) dari sumber ke Px -->
+  <line x1="600" y1="60" x2="480" y2="380" stroke="#38bdf8" stroke-width="1.5" opacity=".28" stroke-dasharray="4,4"/>
 
-  <line x1="150" y1="380" x2="600" y2="60" stroke="#38bdf8" stroke-width="1.5" opacity=".22" stroke-dasharray="4,4"/>
-  <circle cx="600" cy="60" r="6" fill="#38bdf8" opacity=".45"/>
-  <text x="612" y="56" fill="#38bdf8" font-size="14" opacity=".55" font-family="monospace">x</text>
+  <!-- x statis di puncak sinar -->
+  <circle cx="600" cy="60" r="7" fill="#38bdf8" stroke="#0f172a" stroke-width="2"/>
+  <text x="612" y="56" fill="#38bdf8" font-size="14" font-weight="700" font-family="monospace">x</text>
 
-  <line stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="5,5" opacity=".9">
-    <animate attributeName="x1" values="600;480;600" dur="4s" repeatCount="indefinite"
+  <!-- Garis proyeksi tipis dari x ke Px (statis) -->
+  <line x1="600" y1="60" x2="480" y2="380" stroke="#38bdf8" stroke-width="1" opacity=".35" stroke-dasharray="3,5"/>
+
+  <!-- x+δ bergerak sejajar sinar antara x dan titik tengah sinar -->
+  <!-- posisi tengah sinar kira-kira (540,220) -->
+  <line x1="600" y1="60" stroke="#fbbf24" stroke-width="2.5" marker-end="url(#arrowAmberMotif)" opacity=".95">
+    <animate attributeName="x2" values="600;540;600" dur="4s" repeatCount="indefinite"
              calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-    <animate attributeName="y1" values="60;380;60" dur="4s" repeatCount="indefinite"
+    <animate attributeName="y2" values="60;220;60" dur="4s" repeatCount="indefinite"
+             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
+  </line>
+  <text font-size="12" font-weight="700" fill="#fbbf24" font-family="monospace" x="612" y="80">δ ∈ ker(P)</text>
+
+  <!-- Titik x+δ bergerak sejajar sinar -->
+  <circle r="8" fill="#fbbf24" stroke="#0f172a" stroke-width="2">
+    <animate attributeName="cx" values="600;540;600" dur="4s" repeatCount="indefinite"
+             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
+    <animate attributeName="cy" values="60;220;60" dur="4s" repeatCount="indefinite"
+             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
+  </circle>
+  <text font-size="13" font-weight="700" fill="#fbbf24" font-family="monospace">
+    <animate attributeName="x" values="615;555;615" dur="4s" repeatCount="indefinite"
+             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
+    <animate attributeName="y" values="58;218;58" dur="4s" repeatCount="indefinite"
+             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
+    x + δ
+  </text>
+
+  <!-- Garis proyeksi tipis dari x+δ ke Px (bergerak ujungnya, tetap berakhir di Px) -->
+  <line stroke="#fbbf24" stroke-width="1" opacity=".4" stroke-dasharray="3,5">
+    <animate attributeName="x1" values="600;540;600" dur="4s" repeatCount="indefinite"
+             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
+    <animate attributeName="y1" values="60;220;60" dur="4s" repeatCount="indefinite"
              calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
     <animate attributeName="x2" values="480;480;480" dur="4s" repeatCount="indefinite"/>
     <animate attributeName="y2" values="380;380;380" dur="4s" repeatCount="indefinite"/>
   </line>
 
-  <line x1="150" y1="380" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrowBlueMotif)">
-    <animate attributeName="x2" values="600;480;600" dur="4s" repeatCount="indefinite"
-             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-    <animate attributeName="y2" values="60;380;60" dur="4s" repeatCount="indefinite"
-             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-  </line>
-
-  <circle r="8" fill="#38bdf8" stroke="#0f172a" stroke-width="2">
-    <animate attributeName="cx" values="600;480;600" dur="4s" repeatCount="indefinite"
-             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-    <animate attributeName="cy" values="60;380;60" dur="4s" repeatCount="indefinite"
-             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-  </circle>
-
-  <text font-size="16" font-weight="700" fill="#38bdf8" font-family="monospace">
-    <animate attributeName="x" values="615;495;615" dur="4s" repeatCount="indefinite"
-             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-    <animate attributeName="y" values="78;398;78" dur="4s" repeatCount="indefinite"
-             calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1; .4 0 .6 1"/>
-    x + δ
-  </text>
+  <!-- Anotasi invarian eksak: dua panah masuk ke Px -->
+  <text x="330" y="428" fill="#4ade80" font-size="12" font-weight="700" font-family="monospace">P(x) = P(x+δ) = Px</text>
 </svg>
     <p style="text-align:center;color:var(--muted);font-size:.82em;font-family:monospace;margin:2px 0 12px;">
       ▲ Objek bergeser sejajar arah kernel → bayangan Px tetap tak berubah
@@ -743,6 +758,75 @@
         <p style="margin-top:4px;font-size:.8em;color:var(--muted);">P(x+δ) = Px — bukan aproksimasi</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- SLIDE BARU: Ide Dasar Kriptografi Proyeksi -->
+<section class="slide">
+  <span class="tag amber">Motivasi Kriptografis</span>
+  <h2>Dari Proyeksi ke Kriptografi: Ide Dasar</h2>
+  <div class="content">
+
+    <div class="formula" style="background:rgba(251,191,36,.1);border-color:var(--amber);">
+      $P:\ \mathbb{F}_{2^8}^{\,n} \longrightarrow \mathbb{F}_{2^8}^{\,n}, \qquad
+       \dim\operatorname{Im}(P)=1,\qquad \dim\ker(P)=n-1$
+    </div>
+
+    <div class="grid2" style="margin-top:12px;">
+      <div class="box amber">
+        <b>🔻 Kompresi Dimensi</b>
+        <p style="font-size:.92em;margin-top:6px;">
+          Data berdimensi $n$ diproyeksikan menjadi <b>berdimensi satu</b>.
+          Dari $n$ koordinat, hanya 1 koordinat efektif yang tersisa.
+        </p>
+        <div class="formula" style="margin:8px 0;">
+          $\text{informasi hilang} = n - 1$
+        </div>
+        <p style="font-size:.88em;color:var(--muted);">
+          Tepat sebesar $\dim\ker(P)$ seluruh arah yang "tak terlihat" oleh proyeksi.
+        </p>
+      </div>
+      <div class="box violet">
+        <b>🔐 Intuisi Kriptografis</b>
+        <p style="font-size:.92em;margin-top:6px;">
+          Karena $n-1$ dimensi informasi hilang, hasil proyeksi $Px$
+          <b>tidak menentukan</b> $x$ secara tunggal.
+          Setiap $x' = x + \delta$ dengan $\delta \in \ker(P)$ memberi $Px' = Px$.
+        </p>
+        <p style="font-size:.88em;color:var(--muted);">
+          Kesulitan inversi ini adalah benih gagasan <b>kriptografi proyeksi</b>.
+        </p>
+      </div>
+    </div>
+
+    <div class="box red" style="margin-top:14px;">
+      <b>⚠ Mengapa proyeksi linear <i>belum</i> enkripsi baku?</b>
+      <ul class="plain" style="font-size:.92em;margin-top:6px;">
+        <li><b>Linear &amp; mudah dibalik:</b> $P = uv^T$ dapat dipulihkan dari cukup banyak pasangan $(x, Px)$ via eliminasi Gauss $\mathcal{O}(n^3)$.</li>
+        <li><b>Deterministik:</b> plaintext yang sama selalu memberi ciphertext yang sama bocor pola.</li>
+        <li><b>Tidak ada kerahasiaan:</b> kernel publik, sehingga himpunan preimage $x + \ker(P)$ dapat dihitung.</li>
+        <li><b>Tanpa integritas:</b> tidak ada mekanisme mendeteksi manipulasi.</li>
+      </ul>
+    </div>
+
+    <div class="box green" style="margin-top:14px;">
+      <b>✓ Arah Pengembangan dalam Bab Ini</b>
+      <p style="font-size:.93em;margin-top:6px;">
+        Ide "kehilangan dimensi $n-1$" tidak dibuang, melainkan <b>diposisikan ulang</b>:
+      </p>
+      <ul class="plain" style="font-size:.9em;margin-top:4px;">
+        <li><b>Lapisan aljabar:</b> memanfaatkan $\ker(P_{\mathrm{prv}})$ secara <i>selektif</i> bukan untuk menyembunyikan data, tetapi untuk <b>menghapus galat</b> 
+		$\delta \in \ker(P_{\mathrm{prv}})$.</li>
+        <li><b>Lapisan kriptografi:</b> kerahasiaan &amp; integritas sesungguhnya disediakan oleh AES-256-GCM, dengan kunci diturunkan via HKDF-SHA256 dari shared secret X25519.</li>
+        <li><b>Pemisahan tegas (13.2.9):</b> dua lapisan dianalisis dan diganti secara independen.</li>
+      </ul>
+    </div>
+
+    <div class="box" style="margin-top:14px;text-align:center;font-size:.95em;">
+      <b>Ringkas:</b> proyeksi $n \to 1$ memberi <i>intuisi</i> tentang kehilangan informasi;
+      keamanan sesungguhnya datang dari <i>primitive kriptografi</i>, bukan dari operator linearnya.
+    </div>
+
   </div>
 </section>
 
@@ -991,9 +1075,34 @@
   <h2>Penurunan Parameter Protokol</h2>
   <div class="content scrollable">
     <div class="formula" style="text-align:left;background:rgba(0,0,0,.3);">
-      Password → <b><span class="term" data-term="scrypt" data-def="<div><b>Sequential Memory-Hard Password-Based KDF</b> (Standar RFC 7914). Fungsi kriptografi yang dirancang khusus untuk mengubah <i>password</i> berentropi rendah (buatan manusia) menjadi kunci kriptografi yang kuat.</div><div style='margin-top:10px;padding:8px 12px;background:rgba(56,189,248,0.1);border-left:3px solid #38bdf8;border-radius:4px;'><b>Mengapa 'Memory-Hard'?</b><br>Berbeda dengan algoritma hash biasa, scrypt sengaja dirancang untuk memakan banyak RAM (memori) dan CPU. Hal ini membuat penyerang yang mencoba menebak password (<i>brute-force</i>) menggunakan GPU atau chip ASIC khusus menjadi sangat lambat dan mahal.</div><div style='margin-top:10px;font-size:0.9em;color:#fbbf24;'><b>Parameter di Naskah:</b><br>N=2¹⁴ (biaya CPU/memori), r=8 (ukuran blok), p=1 (paralelisasi) menghasilkan 32 byte <i>Input Keying Material</i> (ikm).</div>">scrypt</span></b>(N=2¹⁴, r=8, p=1) → ikm<br>
-      ikm → <b><span class="term" data-term="HKDF (HMAC-based KDF)" data-def="HMAC-based Key Derivation Function (RFC 5869). Menurunkan material kunci dari shared secret menggunakan salt dan info untuk memisahkan tujuan turunan.">HKDF</span></b>(<span class="term" data-term="Info HKDF" data-def="String konteks yang membedakan tujuan turunan kunci dalam HKDF. Menyediakan domain separation: kompromi satu turunan tidak bocor ke turunan lain.">info</span>="alice-seed"/"bob-seed") → 2 kunci <span class="term" data-term="X25519" data-def="Fungsi pertukaran kunci Diffie-Hellman berbasis Curve25519 (RFC 7748). Aman secara klasik, namun rentan terhadap algoritma Shor.">X25519</span> → <b>shared secret</b> s<br>
-      s → HKDF(<span class="term" data-term="Salt" data-def="Nilai publik (biasanya acak) yang dicampur ke KDF untuk mencegah serangan precomputation (rainbow table). Tidak harus dirahasiakan.">salt</span>="Algebra-Params", info="algebra-seed") → 64 byte → (u, v, P<sub>prv</sub>)<br>
+      <span class="term" data-term="Password" data-def="<div>
+	  <b>Rahasia awal berentropi rendah</b> yang menjadi <i>root secret</i> 
+	  (akar rahasia) seluruh skema kriptografi pada diagram. Password <b>bukan</b> dipakai langsung sebagai kunci, 
+	  melainkan diubah terlebih dahulu oleh <i>scrypt</i> menjadi <i>Input Keying Material</i> (ikm) 32 byte.</div>
+	  <div style='margin-top:10px;padding:8px 12px;background:rgba(56,189,248,0.1);border-left:3px solid #38bdf8;border-radius:4px;'>
+	  <b>Peran dalam Alur:</b><br>Password → scrypt(N=2¹⁴, r=8, p=1) → ikm → HKDF → kunci X25519 → shared secret s → HKDF → (u, v, P<sub>prv</sub>) &amp; 
+	  kunci AES-256. Artinya, seluruh kunci turunan bergantung pada password ini.</div>
+	  <div style='margin-top:10px;font-size:0.9em;color:#fbbf24;'><b>Catatan:</b><br>Password di sini berfungsi sebagai 
+	  <i>seed</i> untuk derivasi kunci, bukan sebagai kredensial login yang diverifikasi. Karena entropinya rendah, scrypt yang 
+	  <i>memory-hard</i> dipakai agar brute-force (GPU/ASIC) menjadi mahal.</div>">Password</span>
+	  → <b><span class="term" data-term="scrypt" data-def="<div>
+	  <b>Sequential Memory-Hard Password-Based KDF</b> 
+	  (Standar RFC 7914). Fungsi kriptografi yang dirancang khusus untuk mengubah <i>password</i> 
+	  berentropi rendah (buatan manusia) menjadi kunci kriptografi yang kuat.</div>
+	  <div style='margin-top:10px;padding:8px 12px;background:rgba(56,189,248,0.1);border-left:3px solid #38bdf8;border-radius:4px;'>
+	  <b>Mengapa 'Memory-Hard'?</b><br>Berbeda dengan algoritma hash biasa, scrypt sengaja dirancang untuk memakan banyak RAM (memori) dan CPU. 
+	  Hal ini membuat penyerang yang mencoba menebak password (<i>brute-force</i>) menggunakan GPU atau chip ASIC khusus menjadi sangat 
+	  lambat dan mahal.</div><div style='margin-top:10px;font-size:0.9em;color:#fbbf24;'><b>Parameter di Naskah:</b><br>N=2¹⁴ (biaya CPU/memori), r=8 
+	  (ukuran blok), p=1 (paralelisasi) menghasilkan 32 byte <i>Input Keying Material</i> (ikm).</div>">scrypt</span>
+	  </b>(N=2¹⁴, r=8, p=1) → 
+       ikm → <b><span class="term" data-term="HKDF (HMAC-based KDF)" data-def="HMAC-based Key Derivation Function (RFC 5869). 
+	   Menurunkan material kunci dari shared secret menggunakan salt dan info untuk memisahkan tujuan turunan.">HKDF</span></b>
+	   (<span class="term" data-term="Info HKDF" data-def="String konteks yang membedakan tujuan turunan kunci dalam HKDF. 
+	   Menyediakan domain separation: kompromi satu turunan tidak bocor ke turunan lain.">info</span>="alice-seed"/"bob-seed") → 
+	   2 kunci <span class="term" data-term="X25519" data-def="Fungsi pertukaran kunci Diffie-Hellman berbasis Curve25519 (RFC 7748). 
+	   Aman secara klasik, namun rentan terhadap algoritma Shor.">X25519</span> → <b>shared secret</b> s<br>
+      s → HKDF(<span class="term" data-term="Salt" data-def="Nilai publik (biasanya acak) yang dicampur ke KDF untuk 
+	  mencegah serangan precomputation (rainbow table). Tidak harus dirahasiakan.">salt</span>="Algebra-Params", info="algebra-seed") → 64 byte → (u, v, P<sub>prv</sub>)<br>
       s → HKDF(salt="GCM-Salt", info="AES-256-Key") → kunci AES-256
     </div>
     <div class="grid2" style="margin-top:16px;">
@@ -1005,7 +1114,18 @@
       <div class="card">
         <div class="num">🎯</div>
         <h4>Opsi Low-Rank</h4>
-        <p>$P_{\mathrm{prv}} = AB$ dengan $r < k$ (<span class="term" data-term="Low-Rank Matrix" data-def="<div>Sebuah matriks yang <b>rank</b>-nya (jumlah baris/kolom independen linear) jauh lebih kecil dari ukuran dimensi matriksnya. Dalam naskah ini, \(P_{\mathrm{prv}}\) dibentuk sebagai hasil perkalian dua matriks kecil: \(P_{\mathrm{prv}} = AB\).</div><div style='margin-top:10px;padding:8px 12px;background:rgba(56,189,248,0.1);border-left:3px solid #38bdf8;border-radius:4px;'><b>Konsekuensi Matematis:</b><br>Berdasarkan <i>Teorema Rank-Nullity</i>:<br>\(\dim \ker(P) = k - \text{rank}(P)\)<br>Jika kita memilih rank \(r < k\), maka kita <b>menjamin</b> bahwa dimensi kernel \(> 0\). Artinya, selalu ada vektor tak-nol \(\delta\) yang memenuhi \(P_{\mathrm{prv}}\delta = 0\).</div><div style='margin-top:10px;padding:8px 12px;background:rgba(251,191,36,0.1);border-left:3px solid #fbbf24;border-radius:4px;'><b>Mengapa Ini Penting di Kode SageMath?</b><br>Jika \(P_{\mathrm{prv}}\) dibangkitkan sebagai matriks acak berukuran penuh (\(k \times k\)), kemungkinan ia memiliki kernel trivial (hanya berisi vektor nol) sangatlah tinggi. Jika kernelnya nol, sifat <i>penghapusan galat selektif</i> tidak bisa didemonstrasikan. Opsi low-rank ini disediakan khusus agar kita bisa memasukkan galat \(\delta\) ke dalam kernel.</div>">low-rank</span>) → kernel dijamin $\neq \{0\}$ → sifat penghapusan galat dapat didemonstrasikan.</p>
+        <p>$P_{\mathrm{prv}} = AB$ dengan $r < k$ (<span class="term" data-term="Low-Rank Matrix" data-def="<div>Sebuah matriks yang <b>rank</b>-nya 
+		(jumlah baris/kolom independen linear) jauh lebih kecil dari ukuran dimensi matriksnya. Dalam naskah ini, \(P_{\mathrm{prv}}\) dibentuk 
+		sebagai hasil perkalian dua matriks kecil: \(P_{\mathrm{prv}} = AB\).</div>
+		<div style='margin-top:10px;padding:8px 12px;background:rgba(56,189,248,0.1);border-left:3px solid #38bdf8;border-radius:4px;'>
+		<b>Konsekuensi Matematis:</b><br>Berdasarkan <i>Teorema Rank-Nullity</i>:<br>\(\dim \ker(P) = k - \text{rank}(P)\)
+		<br>Jika kita memilih rank \(r < k\), maka kita <b>menjamin</b> bahwa dimensi kernel \(> 0\). Artinya, selalu ada vektor tak-nol 
+		\(\delta\) yang memenuhi \(P_{\mathrm{prv}}\delta = 0\).</div>
+		<div style='margin-top:10px;padding:8px 12px;background:rgba(251,191,36,0.1);border-left:3px solid #fbbf24;border-radius:4px;'>
+		<b>Mengapa Ini Penting di Kode SageMath?</b><br>Jika \(P_{\mathrm{prv}}\) dibangkitkan sebagai matriks acak berukuran penuh 
+		(\(k \times k\)), kemungkinan ia memiliki kernel trivial (hanya berisi vektor nol) sangatlah tinggi. Jika kernelnya nol, sifat 
+		<i>penghapusan galat selektif</i> tidak bisa didemonstrasikan. Opsi low-rank ini disediakan khusus agar kita bisa memasukkan galat 
+		\(\delta\) ke dalam kernel.</div>">low-rank</span>) → kernel dijamin $\neq \{0\}$ → sifat penghapusan galat dapat didemonstrasikan.</p>
       </div>
     </div>
     <div class="box amber" style="margin-top:14px;">
@@ -1293,14 +1413,14 @@
       <ul class="plain" style="font-size:.88em;margin-top:6px;color:var(--muted);">
         <li><b>Demo kernel:</b> \(u=(1,2,4,8)\), \(v=(1,0,0,0)\) → \(v^Tu=1\) (idempoten) — kini dinyatakan eksplisit di slide agar konsisten dengan narasi.</li>
         <li><b>MathJax:</b> dirender per-slide (bukan seluruh dokumen) untuk efisiensi; tooltip direposisi setelah render selesai.</li>
-        <li><b>Navigasi:</b> tombol <span class="kbd">1</span>–<span class="kbd">9</span> untuk slide 1–9, <span class="kbd">0</span> untuk slide 10; slide 11–17 lewat panel (M).</li>
+        <li><b>Navigasi:</b> tombol <span class="kbd">1</span>–<span class="kbd">9</span> untuk slide 1–9, <span class="kbd">0</span> untuk slide 10; slide 11–18 lewat panel (M).</li>
         <li><b>Aksesibilitas:</b> ditambahkan <code>:focus-visible</code> dan <code>prefers-reduced-motion</code>.</li>
         <li><b>Referensi:</b> daftar bacaan lanjutan dari naskah (max-plus/min-plus, wavelet) belum disertakan — dapat ditambahkan sebagai slide 18 jika diperlukan.</li>
       </ul>
     </div>
 
     <div class="box violet" style="margin-top:14px;text-align:center;">
-      <b>Kontribusi inti:</b> fondasi matematis untuk penelitian pada persimpangan aljabar abstrak, kriptografi, dan mitigasi galat — dengan klaim yang dibatasi pada bukti dan verifikasi.
+      <b>Kontribusi inti:</b> fondasi matematis untuk penelitian pada persimpangan aljabar abstrak, kriptografi, dan mitigasi galat dengan klaim yang dibatasi pada bukti dan verifikasi.
     </div>
 
   </div>
@@ -1310,7 +1430,7 @@
 
 <div class="nav">
   <button onclick="prevSlide()" title="Sebelumnya (←)">←</button>
-  <span class="counter" id="counter" onclick="toggleSlidePanel()" style="cursor:pointer;" title="Buka daftar slide">1 / 17</span>
+  <span class="counter" id="counter" onclick="toggleSlidePanel()" style="cursor:pointer;" title="Buka daftar slide">1 / 18</span>
   <button onclick="nextSlide()" title="Berikutnya (→)">→</button>
 </div>
 
